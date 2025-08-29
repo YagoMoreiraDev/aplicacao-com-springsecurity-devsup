@@ -62,21 +62,11 @@ public class User {
         this.password = password;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(cpf, user.cpf);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, cpf);
-    }
-
     public void addRole(Role role) {
-        roles.add(role);
+        this.roles.add(role);
     }
+
+    public void removeRole(Role role) { this.roles.remove(role); }
 
     public boolean hasRole(String buscarRole) {
         for(Role result : roles) {
@@ -85,5 +75,21 @@ public class User {
             }
         }
         return false;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }
