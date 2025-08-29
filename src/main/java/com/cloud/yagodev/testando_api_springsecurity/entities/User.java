@@ -1,6 +1,7 @@
 package com.cloud.yagodev.testando_api_springsecurity.entities;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.ColumnTransformer;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -13,9 +14,24 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
+
+    @Column(name = "name", columnDefinition = "bytea", nullable = false)
+    @org.hibernate.annotations.ColumnTransformer(
+            read  = "pgp_sym_decrypt(name, current_setting('app.encryption_key'))::text",
+            write = "pgp_sym_encrypt(?::text, current_setting('app.encryption_key'))"
+    )
     private String name;
+
+    @Column(name = "cpf", columnDefinition = "bytea", nullable = false)
+    @org.hibernate.annotations.ColumnTransformer(
+            read  = "pgp_sym_decrypt(cpf, current_setting('app.encryption_key'))::text",
+            write = "pgp_sym_encrypt(?::text, current_setting('app.encryption_key'))"
+    )
     private String cpf;
     private String password;
+
+    @Column(name = "cpf_hash", length = 64, unique = true)
+    private String cpfHash;
 
     @ManyToMany
     @JoinTable(name = "tb_user_role",
@@ -61,6 +77,9 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public String getCpfHash() { return cpfHash; }
+    public void setCpfHash(String cpfHash) { this.cpfHash = cpfHash; }
 
     public void addRole(Role role) {
         this.roles.add(role);
