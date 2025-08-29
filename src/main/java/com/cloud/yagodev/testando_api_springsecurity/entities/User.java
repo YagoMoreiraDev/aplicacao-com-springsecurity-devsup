@@ -1,4 +1,4 @@
-package com.cloud.yagodev.testando_api_springsecurity;
+package com.cloud.yagodev.testando_api_springsecurity.entities;
 
 import jakarta.persistence.*;
 
